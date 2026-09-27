@@ -1,279 +1,305 @@
-<script>
-  window.location.href = "https://comfortstudy1.vercel.app";
-</script>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ComfortStudy - Cadastro</title>
-    <!-- Ícones Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Script Oficial do Google -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(15, 23, 42, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --input-bg: rgba(15, 23, 42, 0.6);
-            --input-border: rgba(255, 255, 255, 0.12);
-            --primary-blue: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-white: #ffffff;
-            --text-muted: #94a3b8;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ComfortStudy - Calendário & Agenda</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border: #334155;
+      --danger: #ef4444;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: radial-gradient(circle at top left, #1e3a8a 0%, #0b0f19 50%, #1e1b4b 100%);
-            color: var(--text-white);
-            padding: 20px;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-        .login-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 440px;
-        }
+    header {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .brand-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+    header h1 {
+      font-size: 1.5rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .brand-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: #fff;
-            margin: 0 auto 16px auto;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-        }
+    .btn-back {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
 
-        .brand-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
-        }
+    .btn-back:hover {
+      background: var(--card-bg);
+      color: var(--text);
+    }
 
-        .brand-header p {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+    main {
+      width: 100%;
+      max-width: 800px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+    }
 
-        .login-card {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 28px 28px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
 
-        .card-subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
 
-        .input-group { margin-bottom: 14px; }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        .input-wrapper i {
-            position: absolute;
-            left: 16px;
-            color: var(--text-muted);
-            font-size: 18px;
-        }
+    .form-group label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
 
-        .input-wrapper input {
-            width: 100%;
-            padding: 12px 16px 12px 46px;
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: 0.2s;
-        }
+    input, select {
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
 
-        .input-wrapper input:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+    input:focus, select:focus {
+      border-color: var(--accent);
+    }
 
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
-            margin-top: 10px;
-        }
+    button[type="submit"] {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-        .btn-primary:hover { opacity: 0.95; }
+    button[type="submit"]:hover {
+      background: var(--accent-hover);
+    }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 18px 0;
-            color: var(--text-muted);
-            font-size: 12px;
-        }
+    .events-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
 
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--input-border);
-        }
+    .event-item {
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .divider span { padding: 0 10px; }
+    .event-item.prova { border-left-color: #ef4444; }
+    .event-item.trabalho { border-left-color: #f59e0b; }
+    .event-item.revisao { border-left-color: #10b981; }
 
-        /* Container do Botão do Google */
-        .google-btn-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            min-height: 44px;
-        }
+    .event-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
 
-        .signup-text {
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 20px;
-        }
+    .event-info p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
 
-        .signup-text a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
 
-        .signup-text a:hover { text-decoration: underline; }
-    </style>
+    .btn-delete:hover {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .empty-msg {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 20px 0;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <div class="brand-header">
-            <div class="brand-icon"><i class="ph ph-graduation-cap"></i></div>
-            <h1>ComfortStudy</h1>
-            <p>Organize seus estudos,<br>conquiste seus objetivos.</p>
+  <header>
+    <h1>📅 Agenda ComfortStudy</h1>
+    <a href="index_2.html" class="btn-back">← Voltar ao Painel</a>
+  </header>
+
+  <main>
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <section class="card">
+      <h2>Novo Compromisso</h2>
+      <form id="eventForm">
+        <div class="form-group">
+          <label for="eventTitle">Título do evento / prova</label>
+          <input type="text" id="eventTitle" placeholder="Ex: Prova de Matemática" required />
         </div>
 
-        <div class="login-card">
-            <h2 class="card-title">Crie sua conta</h2>
-            <p class="card-subtitle">Preencha os dados abaixo para começar</p>
+        <div class="form-group">
+          <label for="eventDate">Data de entrega / realização</label>
+          <input type="date" id="eventDate" required />
+        </div>
 
-            <form action="index_2.html">
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <i class="ph ph-user"></i>
-                        <input type="text" placeholder="Nome Completo" required>
-                    </div>
-                </div>
+        <div class="form-group">
+          <label for="eventType">Categoria</label>
+          <select id="eventType">
+            <option value="prova">🔴 Prova / Teste</option>
+            <option value="trabalho">🟡 Trabalho / Entrega</option>
+            <option value="revisao">🟢 Revisão / Estudo</option>
+          </select>
+        </div>
 
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <i class="ph ph-envelope-simple"></i>
-                        <input type="email" placeholder="E-mail" required>
-                    </div>
-                </div>
+        <button type="submit">Agendar Evento</button>
+      </form>
+    </section>
 
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <i class="ph ph-lock"></i>
-                        <input type="password" placeholder="Senha" required>
-                    </div>
-                </div>
+    <!-- LISTA DE EVENTOS -->
+    <section class="card">
+      <h2>Próximos Eventos</h2>
+      <ul id="eventsList" class="events-list"></ul>
+    </section>
+  </main>
 
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <i class="ph ph-lock-key"></i>
-                        <input type="password" placeholder="Confirmar Senha" required>
-                    </div>
-                </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("eventForm");
+      const list = document.getElementById("eventsList");
 
-                <button type="submit" class="btn-primary">Criar Conta <i class="ph ph-arrow-right"></i></button>
-            </form>
+      let events = JSON.parse(localStorage.getItem("comfortstudy_agenda")) || [];
 
-            <div class="divider"><span>ou</span></div>
+      function saveAndRender() {
+        localStorage.setItem("comfortstudy_agenda", JSON.stringify(events));
+        render();
+      }
 
-            <!-- CONTAINER PARA O BOTÃO DO GOOGLE -->
-            <div class="google-btn-container">
-                <div id="googleBtnCadastro"></div>
+      function render() {
+        list.innerHTML = "";
+
+        if (events.length === 0) {
+          list.innerHTML = `<li class="empty-msg">Nenhum compromisso agendado.</li>`;
+          return;
+        }
+
+        // Ordena por data (mais recente primeiro)
+        events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        events.forEach((ev, index) => {
+          const li = document.createElement("li");
+          li.className = `event-item ${ev.type}`;
+
+          const formattedDate = ev.date.split("-").reverse().join("/");
+
+          li.innerHTML = `
+            <div class="event-info">
+              <h3>${ev.title}</h3>
+              <p>📅 ${formattedDate}</p>
             </div>
+            <button class="btn-delete" title="Excluir" onclick="deleteEvent(${index})">🗑️</button>
+          `;
 
-            <p class="signup-text">Já tem uma conta? <a href="index.html">Entrar</a></p>
-        </div>
-    </div>
+          list.appendChild(li);
+        });
+      }
 
-    <script>
-        function handleCredentialResponse(response) {
-            // Assim que o utilizador escolhe a conta no Google, redireciona para a dashboard
-            window.location.href = "index_2.html";
-        }
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = document.getElementById("eventTitle").value;
+        const date = document.getElementById("eventDate").value;
+        const type = document.getElementById("eventType").value;
 
-        window.onload = function () {
-            if (window.google) {
-                google.accounts.id.initialize({
-                    client_id: "220214441909-s31fingnai04ghtbomjp26kai7mi2vnm.apps.googleusercontent.com",
-                    callback: handleCredentialResponse,
-                    auto_select: false
-                });
+        events.push({ title, date, type });
+        saveAndRender();
 
-                // Renderiza o botão oficial do Google
-                google.accounts.id.renderButton(
-                    document.getElementById("googleBtnCadastro"),
-                    { 
-                        theme: "filled_blue", 
-                        size: "large", 
-                        width: "100%",
-                        text: "signup_with",
-                        shape: "rectangular"
-                    }
-                );
-            }
-        }
-    </script>
+        form.reset();
+      });
+
+      window.deleteEvent = (index) => {
+        events.splice(index, 1);
+        saveAndRender();
+      };
+
+      render();
+    });
+  </script>
 </body>
 </html>
