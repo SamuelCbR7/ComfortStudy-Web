@@ -1,305 +1,634 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ComfortStudy - Calendário & Agenda</title>
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --text: #f8fafc;
-      --text-secondary: #94a3b8;
-      --border: #334155;
-      --danger: #ef4444;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <title>ComfortStudy - Cadastro</title>
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+    <!-- Ícones Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    header {
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--border);
-    }
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    header h1 {
-      font-size: 1.5rem;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-back {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.9rem;
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .btn-back:hover {
-      background: var(--card-bg);
-      color: var(--text);
-    }
-
-    main {
-      width: 100%;
-      max-width: 800px;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 768px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-      color: var(--text);
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    input, select {
-      background: var(--bg-color);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent);
-    }
-
-    button[type="submit"] {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button[type="submit"]:hover {
-      background: var(--accent-hover);
-    }
-
-    .events-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .event-item {
-      background: var(--bg-color);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .event-item.prova { border-left-color: #ef4444; }
-    .event-item.trabalho { border-left-color: #f59e0b; }
-    .event-item.revisao { border-left-color: #10b981; }
-
-    .event-info h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .event-info p {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-
-    .btn-delete {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-
-    .btn-delete:hover {
-      color: var(--danger);
-      background: rgba(239, 68, 68, 0.1);
-    }
-
-    .empty-msg {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 20px 0;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>📅 Agenda ComfortStudy</h1>
-    <a href="index_2.html" class="btn-back">← Voltar ao Painel</a>
-  </header>
-
-  <main>
-    <!-- FORMULÁRIO DE CADASTRO -->
-    <section class="card">
-      <h2>Novo Compromisso</h2>
-      <form id="eventForm">
-        <div class="form-group">
-          <label for="eventTitle">Título do evento / prova</label>
-          <input type="text" id="eventTitle" placeholder="Ex: Prova de Matemática" required />
-        </div>
-
-        <div class="form-group">
-          <label for="eventDate">Data de entrega / realização</label>
-          <input type="date" id="eventDate" required />
-        </div>
-
-        <div class="form-group">
-          <label for="eventType">Categoria</label>
-          <select id="eventType">
-            <option value="prova">🔴 Prova / Teste</option>
-            <option value="trabalho">🟡 Trabalho / Entrega</option>
-            <option value="revisao">🟢 Revisão / Estudo</option>
-          </select>
-        </div>
-
-        <button type="submit">Agendar Evento</button>
-      </form>
-    </section>
-
-    <!-- LISTA DE EVENTOS -->
-    <section class="card">
-      <h2>Próximos Eventos</h2>
-      <ul id="eventsList" class="events-list"></ul>
-    </section>
-  </main>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("eventForm");
-      const list = document.getElementById("eventsList");
-
-      let events = JSON.parse(localStorage.getItem("comfortstudy_agenda")) || [];
-
-      function saveAndRender() {
-        localStorage.setItem("comfortstudy_agenda", JSON.stringify(events));
-        render();
-      }
-
-      function render() {
-        list.innerHTML = "";
-
-        if (events.length === 0) {
-          list.innerHTML = `<li class="empty-msg">Nenhum compromisso agendado.</li>`;
-          return;
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --primary-blue: #3b82f6;
+            --text-white: #ffffff;
+            --text-muted: #94a3b8;
         }
 
-        // Ordena por data (mais recente primeiro)
-        events.sort((a, b) => new Date(a.date) - new Date(b.date));
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-        events.forEach((ev, index) => {
-          const li = document.createElement("li");
-          li.className = `event-item ${ev.type}`;
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
 
-          const formattedDate = ev.date.split("-").reverse().join("/");
+            background: radial-gradient(
+                circle at top left,
+                #1e3a8a 0%,
+                #0b0f19 50%,
+                #1e1b4b 100%
+            );
 
-          li.innerHTML = `
-            <div class="event-info">
-              <h3>${ev.title}</h3>
-              <p>📅 ${formattedDate}</p>
+            color: var(--text-white);
+            padding: 20px;
+        }
+
+        .login-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .brand-icon {
+            width: 56px;
+            height: 56px;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #6366f1
+            );
+
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+            color: #fff;
+
+            margin: 0 auto 16px auto;
+
+            box-shadow:
+                0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+
+            margin-bottom: 6px;
+        }
+
+        .brand-header p {
+            font-size: 14px;
+
+            color: var(--text-muted);
+
+            line-height: 1.4;
+        }
+
+        .login-card {
+            width: 100%;
+
+            background: var(--card-bg);
+
+            border: 1px solid var(--card-border);
+
+            border-radius: 20px;
+
+            padding: 28px;
+
+            backdrop-filter: blur(12px);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+
+            color: var(--text-muted);
+
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+
+            left: 16px;
+
+            color: var(--text-muted);
+
+            font-size: 18px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            padding: 12px 16px 12px 46px;
+
+            background: var(--input-bg);
+
+            border: 1px solid var(--input-border);
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary-blue);
+
+            box-shadow:
+                0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+
+            padding: 14px;
+
+            background: linear-gradient(
+                90deg,
+                #2563eb,
+                #3b82f6
+            );
+
+            border: none;
+
+            border-radius: 10px;
+
+            color: #fff;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            transition: 0.2s;
+
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+
+            text-align: center;
+
+            margin: 18px 0;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+
+            flex: 1;
+
+            border-bottom:
+                1px solid var(--input-border);
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        .google-btn-container {
+            display: flex;
+
+            justify-content: center;
+
+            width: 100%;
+
+            min-height: 44px;
+        }
+
+        .signup-text {
+            text-align: center;
+
+            font-size: 13px;
+
+            color: var(--text-muted);
+
+            margin-top: 20px;
+        }
+
+        .signup-text a {
+            color: var(--primary-blue);
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
+
+        .google-error {
+            display: none;
+
+            text-align: center;
+
+            color: #f87171;
+
+            font-size: 12px;
+
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+
+        <!-- CABEÇALHO -->
+
+        <div class="brand-header">
+
+            <div class="brand-icon">
+                <i class="ph ph-graduation-cap"></i>
             </div>
-            <button class="btn-delete" title="Excluir" onclick="deleteEvent(${index})">🗑️</button>
-          `;
 
-          list.appendChild(li);
-        });
-      }
+            <h1>ComfortStudy</h1>
 
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const title = document.getElementById("eventTitle").value;
-        const date = document.getElementById("eventDate").value;
-        const type = document.getElementById("eventType").value;
+            <p>
+                Organize seus estudos,<br>
+                conquiste seus objetivos.
+            </p>
 
-        events.push({ title, date, type });
-        saveAndRender();
+        </div>
 
-        form.reset();
-      });
 
-      window.deleteEvent = (index) => {
-        events.splice(index, 1);
-        saveAndRender();
-      };
+        <!-- CARTÃO DE CADASTRO -->
 
-      render();
-    });
-  </script>
+        <div class="login-card">
+
+            <h2 class="card-title">
+                Crie sua conta
+            </h2>
+
+            <p class="card-subtitle">
+                Preencha os dados abaixo para começar
+            </p>
+
+
+            <!-- FORMULÁRIO -->
+
+            <form
+                id="cadastroForm"
+                action="index_2.html"
+                method="get"
+            >
+
+                <!-- NOME -->
+
+                <div class="input-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-user"></i>
+
+                        <input
+                            type="text"
+                            name="nome"
+                            placeholder="Nome Completo"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="input-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-envelope-simple"></i>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="E-mail"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- SENHA -->
+
+                <div class="input-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-lock"></i>
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Senha"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRMAR SENHA -->
+
+                <div class="input-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-lock-key"></i>
+
+                        <input
+                            type="password"
+                            id="confirmarSenha"
+                            placeholder="Confirmar Senha"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTÃO -->
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+
+                    Criar Conta
+
+                    <i class="ph ph-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- DIVISOR -->
+
+            <div class="divider">
+
+                <span>ou</span>
+
+            </div>
+
+
+            <!-- GOOGLE -->
+
+            <div class="google-btn-container">
+
+                <div id="googleBtnCadastro"></div>
+
+            </div>
+
+
+            <div
+                id="googleError"
+                class="google-error"
+            >
+                Não foi possível carregar o login do Google.
+            </div>
+
+
+            <!-- VOLTAR PARA LOGIN -->
+
+            <p class="signup-text">
+
+                Já tem uma conta?
+
+                <a href="index.html">
+                    Entrar
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /*
+         * VERIFICAÇÃO DAS SENHAS
+         */
+
+        document
+            .getElementById("cadastroForm")
+            .addEventListener(
+                "submit",
+                function(event) {
+
+                    const senha =
+                        document.getElementById("senha").value;
+
+                    const confirmarSenha =
+                        document.getElementById("confirmarSenha").value;
+
+
+                    if (senha !== confirmarSenha) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "As senhas não são iguais."
+                        );
+
+                        return;
+                    }
+
+                }
+            );
+
+
+        /*
+         * LOGIN COM GOOGLE
+         */
+
+        function handleCredentialResponse(response) {
+
+            if (
+                response &&
+                response.credential
+            ) {
+
+                window.location.href =
+                    "index_2.html";
+
+            } else {
+
+                document
+                    .getElementById("googleError")
+                    .style.display = "block";
+
+            }
+
+        }
+
+
+        /*
+         * INICIAR GOOGLE
+         */
+
+        function iniciarGoogleLogin() {
+
+            if (
+                typeof google === "undefined" ||
+                !google.accounts ||
+                !google.accounts.id
+            ) {
+
+                document
+                    .getElementById("googleError")
+                    .style.display = "block";
+
+                return;
+            }
+
+
+            google.accounts.id.initialize({
+
+                client_id:
+                    "220214441909-s31fingnai04ghtbomjp26kai7mi2vnm.apps.googleusercontent.com",
+
+                callback:
+                    handleCredentialResponse,
+
+                auto_select:
+                    false,
+
+                cancel_on_tap_outside:
+                    true
+
+            });
+
+
+            /*
+             * BOTÃO GOOGLE
+             */
+
+            google.accounts.id.renderButton(
+
+                document.getElementById(
+                    "googleBtnCadastro"
+                ),
+
+                {
+
+                    theme:
+                        "filled_blue",
+
+                    size:
+                        "large",
+
+                    width:
+                        360,
+
+                    text:
+                        "signup_with",
+
+                    shape:
+                        "rectangular",
+
+                    logo_alignment:
+                        "left"
+
+                }
+
+            );
+
+        }
+
+
+        /*
+         * ESPERA O GOOGLE CARREGAR
+         */
+
+        window.addEventListener(
+            "load",
+            function() {
+
+                setTimeout(
+                    iniciarGoogleLogin,
+                    500
+                );
+
+            }
+        );
+
+    </script>
+
 </body>
 </html>

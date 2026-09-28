@@ -67,8 +67,14 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--text)}
 .field input,.field select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;outline:none}.field input:focus,.field select:focus{border-color:#3b82f6}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.btn-cancel{border:1px solid #d1d5db;background:#fff;padding:10px 16px;border-radius:8px;cursor:pointer}
 .empty-view{background:#fff;border-radius:16px;padding:40px;text-align:center;box-shadow:0 1px 3px #0000000d}.empty-view i{font-size:50px;color:#3b82f6;margin-bottom:12px}.empty-view p{color:var(--muted);margin-top:8px}
+
+.subjects-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.subject-card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 1px 3px #0000000d;border-top:5px solid #3b82f6;position:relative}.subject-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}.subject-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:23px}.subject-name{font-size:17px;font-weight:700}.subject-meta{font-size:12px;color:var(--muted);margin-top:3px}.subject-actions{position:absolute;top:14px;right:14px}.subject-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.subject-stat{background:#f8fafc;border-radius:10px;padding:10px}.subject-stat span{display:block;font-size:11px;color:var(--muted)}.subject-stat strong{font-size:18px}.subject-empty{grid-column:1/-1}.subject-add{margin-bottom:20px}.color-row{display:flex;gap:10px;align-items:center}.color-row input{width:48px;height:38px;padding:3px;cursor:pointer}
+@media(max-width:900px){.subjects-wrap{grid-template-columns:1fr 1fr}}@media(max-width:650px){.subjects-wrap{grid-template-columns:1fr}}
 @media(max-width:900px){.sidebar{width:210px}.content{padding:24px}.cards-grid{grid-template-columns:1fr}.dashboard-grid,.calendar-bottom{grid-template-columns:1fr}.day{min-height:75px}}
 @media(max-width:650px){body{display:block}.sidebar{width:100%;min-height:auto}.user-profile{margin-top:20px}.menu{display:grid;grid-template-columns:1fr 1fr}.content{padding:16px}.topbar{align-items:flex-start;gap:12px}.calendar-wrap{padding:12px}.day{min-height:62px;padding:5px}.event{font-size:9px}}
+
+.subject-detail-head{display:flex;align-items:center;gap:14px;margin-bottom:22px}.back-btn{border:1px solid var(--border);background:#fff;border-radius:8px;width:42px;height:42px;cursor:pointer;font-size:18px}.subject-detail-title{display:flex;align-items:center;gap:12px}.detail-dot{width:14px;height:14px;border-radius:50%}.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}.detail-stat{background:#fff;border-radius:14px;padding:18px;box-shadow:0 1px 3px #0000000d}.detail-stat span{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.detail-stat strong{font-size:22px}.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.filter-btn{border:1px solid var(--border);background:#fff;padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:600}.filter-btn.active{background:#3b82f6;color:#fff;border-color:#3b82f6}.detail-task{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid #f3f4f6}.detail-task:last-child{border-bottom:0}.detail-task-main{flex:1}.detail-task-title{font-weight:600}.detail-task-info{font-size:12px;color:var(--muted);margin-top:4px}.done-badge{font-size:11px;padding:4px 8px;border-radius:6px;background:#f0fdf4;color:#16a34a}.pending-badge{font-size:11px;padding:4px 8px;border-radius:6px;background:#eff6ff;color:#2563eb}.detail-empty{padding:35px;text-align:center;color:var(--muted)}
+@media(max-width:650px){.detail-stats{grid-template-columns:1fr}.subject-detail-head{align-items:flex-start}.detail-task{align-items:flex-start;flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -97,7 +103,7 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--text)}
   <section class="cards-grid">
     <div class="card"><div class="card-icon blue"><i class="ph ph-clock-afternoon"></i></div><div class="card-info"><h3>Prazos Próximos</h3><p class="number" id="dashUpcoming">0 Atividades</p></div></div>
     <div class="card"><div class="card-icon green"><i class="ph ph-check-circle"></i></div><div class="card-info"><h3>Concluídas</h3><p class="number" id="dashDone">0 Tarefas</p></div></div>
-    <div class="card"><div class="card-icon purple"><i class="ph ph-book-open"></i></div><div class="card-info"><h3>Matérias Ativas</h3><p class="number">6 Disciplinas</p></div></div>
+    <div class="card"><div class="card-icon purple"><i class="ph ph-book-open"></i></div><div class="card-info"><h3>Matérias Ativas</h3><p class="number" id="dashSubjects">0 Disciplinas</p></div></div>
   </section>
   <div class="dashboard-grid">
     <section class="panel"><h2><i class="ph ph-list-checks"></i> Minhas Tarefas</h2><div class="task-list" id="dashboardTasks"></div></section>
@@ -121,7 +127,8 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--text)}
   </div>
 </section>
 
-<section id="materias" class="view"><header class="topbar"><h1>Matérias</h1></header><div class="empty-view"><i class="ph ph-books"></i><h2>Suas disciplinas</h2><p>Área de matérias pronta para receber suas disciplinas.</p></div></section>
+<section id="materias" class="view"><header class="topbar"><h1>Matérias</h1><button class="btn-primary" id="newSubjectBtn"><i class="ph ph-plus"></i> Nova Matéria</button></header><div class="subject-add"><h2>Suas disciplinas</h2><p>Organize suas matérias e acompanhe as atividades de cada uma.</p></div><div class="subjects-wrap" id="subjectsList"></div></section>
+<section id="materiaDetalhe" class="view"><header class="subject-detail-head"><button class="back-btn" id="backSubjects" title="Voltar para matérias"><i class="ph ph-arrow-left"></i></button><div class="subject-detail-title"><span class="detail-dot" id="detailDot"></span><div><h1 id="detailSubjectName">Matéria</h1><p class="subject-meta">Atividades, provas e trabalhos desta disciplina</p></div></div><div style="margin-left:auto"><button class="btn-primary" id="detailNewTask"><i class="ph ph-plus"></i> Nova Atividade</button></div></header><div class="detail-stats"><div class="detail-stat"><span>Total de atividades</span><strong id="detailTotal">0</strong></div><div class="detail-stat"><span>Concluídas</span><strong id="detailDone">0</strong></div><div class="detail-stat"><span>Pendentes</span><strong id="detailPending">0</strong></div></div><div class="panel"><div class="filter-row"><button class="filter-btn active" data-filter="Todos">Todos</button><button class="filter-btn" data-filter="Estudo">Estudos</button><button class="filter-btn" data-filter="Trabalho">Trabalhos</button><button class="filter-btn" data-filter="Prova">Provas</button></div><div id="subjectTasks"></div></div></section>
 <section id="tarefas" class="view"><header class="topbar"><h1>Tarefas</h1><button class="btn-primary" id="tasksNewBtn"><i class="ph ph-plus"></i> Nova Tarefa</button></header><div class="panel"><div class="task-list" id="allTasks"></div></div></section>
 <section id="desempenho" class="view"><header class="topbar"><h1>Desempenho</h1></header><div class="empty-view"><i class="ph ph-chart-line-up"></i><h2>Seu desempenho</h2><p>Os relatórios poderão ser adicionados aqui.</p></div></section>
 
@@ -140,8 +147,23 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--text)}
   </div>
 </div>
 
+<div class="modal-bg" id="subjectModalBg"><div class="modal"><div class="modal-head"><h2>Nova matéria</h2><button class="close" id="closeSubjectModal">&times;</button></div><form id="subjectForm"><div class="field"><label for="subjectName">Nome da matéria</label><input id="subjectName" required placeholder="Ex.: Matemática"></div><div class="field"><label for="subjectColor">Cor da matéria</label><div class="color-row"><input id="subjectColor" type="color" value="#3b82f6"><span>Escolha uma cor</span></div></div><div class="modal-actions"><button type="button" class="btn-cancel" id="cancelSubjectModal">Cancelar</button><button class="btn-primary" type="submit">Adicionar</button></div></form></div></div>
 <script>
 const STORAGE_KEY="comfortstudy_tasks_v1";
+const SUBJECTS_KEY="comfortstudy_subjects_v1";
+let subjects=[];
+try{const x=localStorage.getItem(SUBJECTS_KEY);const p=x?JSON.parse(x):[];subjects=Array.isArray(p)?p:[]}catch(e){subjects=[]}
+const DEFAULT_SUBJECTS=[{id:"default-mat",name:"Matemática",color:"#ef4444"},{id:"default-hist",name:"História",color:"#eab308"},{id:"default-port",name:"Português",color:"#3b82f6"},{id:"default-cien",name:"Ciências",color:"#22c55e"},{id:"default-ing",name:"Inglês",color:"#8b5cf6"},{id:"default-out",name:"Outras",color:"#64748b"}];
+if(!subjects.length){subjects=DEFAULT_SUBJECTS;try{localStorage.setItem(SUBJECTS_KEY,JSON.stringify(subjects))}catch(e){}}
+function saveSubjects(){try{localStorage.setItem(SUBJECTS_KEY,JSON.stringify(subjects))}catch(e){}}
+function escapeHtml(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function renderSubjects(){const el=document.getElementById("subjectsList");if(!el)return;el.innerHTML=subjects.length?subjects.map(s=>{const a=tasks.filter(t=>t.subject===s.name),d=a.filter(t=>t.done).length;return `<div class="subject-card" style="border-top-color:${s.color}" onclick="openSubjectDetail('${s.id}')"><div class="subject-actions"><button class="icon-btn" title="Excluir" onclick="event.stopPropagation();deleteSubject('${s.id}')"><i class="ph ph-trash"></i></button></div><div class="subject-top"><div class="subject-icon" style="background:${s.color}18;color:${s.color}"><i class="ph ph-book-open"></i></div><div><div class="subject-name">${escapeHtml(s.name)}</div><div class="subject-meta">${a.length} atividade${a.length===1?"":"s"} • Clique para abrir</div></div></div><div class="subject-stats"><div class="subject-stat"><span>Atividades</span><strong>${a.length}</strong></div><div class="subject-stat"><span>Concluídas</span><strong>${d}</strong></div></div></div>`}).join(""):'<div class="empty-view subject-empty"><i class="ph ph-books"></i><h2>Nenhuma matéria</h2><p>Clique em "Nova Matéria" para adicionar sua primeira disciplina.</p></div>'}
+let selectedSubjectId=null, subjectFilter="Todos";
+function openSubjectDetail(id){const subject=subjects.find(s=>s.id===id);if(!subject)return;selectedSubjectId=id;subjectFilter="Todos";document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter==='Todos'));document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('materiaDetalhe').classList.add('active');document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));document.querySelector('.menu button[data-view="materias"]').classList.add('active');renderSubjectDetail()}
+function renderSubjectDetail(){const subject=subjects.find(s=>s.id===selectedSubjectId);if(!subject)return;const list=tasks.filter(t=>t.subject===subject.name),done=list.filter(t=>t.done).length;document.getElementById('detailSubjectName').textContent=subject.name;document.getElementById('detailDot').style.background=subject.color;document.getElementById('detailTotal').textContent=list.length;document.getElementById('detailDone').textContent=done;document.getElementById('detailPending').textContent=list.length-done;const filtered=subjectFilter==='Todos'?list:list.filter(t=>t.type===subjectFilter),el=document.getElementById('subjectTasks');el.innerHTML=filtered.length?[...filtered].sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="detail-task"><div class="detail-task-main"><div class="detail-task-title ${t.done?'strike':''}">${escapeHtml(t.title)}</div><div class="detail-task-info">${t.type} • ${formatDate(t.date)}</div></div><span class="${t.done?'done-badge':'pending-badge'}">${t.done?'Concluída':'Pendente'}</span><button class="icon-btn" title="${t.done?'Desmarcar':'Concluir'}" onclick="toggleTask('${t.id}')"><i class="ph ${t.done?'ph-arrow-counter-clockwise':'ph-check'}"></i></button><button class="icon-btn" title="Excluir" onclick="deleteTask('${t.id}')"><i class="ph ph-trash"></i></button></div>`).join(''):`<div class="detail-empty"><i class="ph ph-clipboard-text" style="font-size:42px"></i><p>Nenhuma atividade ${subjectFilter==='Todos'?'':subjectFilter.toLowerCase()+' '}cadastrada nesta matéria.</p></div>`}
+function deleteSubject(id){const s=subjects.find(x=>x.id===id);if(s&&confirm(`Excluir "${s.name}"? As atividades dela continuarão no calendário.`)){subjects=subjects.filter(x=>x.id!==id);saveSubjects();renderAll()}}
+function updateSubjectSelect(){const el=document.getElementById("taskSubject");if(el)el.innerHTML=subjects.map(s=>`<option>${escapeHtml(s.name)}</option>`).join("")+'<option>Outro</option>'}
+
 let tasks=[];
 try {
   const stored=localStorage.getItem(STORAGE_KEY);
@@ -160,7 +182,7 @@ function save(){
 }
 function isoDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function formatDate(s){const [y,m,d]=s.split("-");return d+"/"+m+"/"+y}
-function openModal(date=""){document.getElementById("taskDate").value=date||isoDate(new Date());document.getElementById("modalBg").classList.add("show");document.getElementById("taskTitle").focus()}
+function openModal(date="",subjectName=""){updateSubjectSelect();document.getElementById("taskDate").value=date||isoDate(new Date());if(subjectName)document.getElementById("taskSubject").value=subjectName;document.getElementById("modalBg").classList.add("show");document.getElementById("taskTitle").focus()}
 function closeModal(){document.getElementById("modalBg").classList.remove("show");document.getElementById("taskForm").reset()}
 function render(){
   const y=current.getFullYear(),m=current.getMonth();
@@ -190,9 +212,9 @@ function renderAllTasks(){
   const el=document.getElementById("allTasks");
   el.innerHTML=tasks.length?[...tasks].sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="task-item"><span><b>${t.title}</b><br><small>${t.subject} • ${t.type}</small></span><span class="task-date">${formatDate(t.date)}</span><button class="icon-btn" title="Concluir" onclick="toggleTask('${t.id}')"><i class="ph ${t.done?"ph-arrow-counter-clockwise":"ph-check"}"></i></button><button class="icon-btn" title="Excluir" onclick="deleteTask('${t.id}')"><i class="ph ph-trash"></i></button></div>`).join(""):`<p class="empty">Nenhuma tarefa cadastrada.</p>`;
 }
-function toggleTask(id){const t=tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderAll()}}
-function deleteTask(id){if(confirm("Excluir esta atividade?")){tasks=tasks.filter(x=>x.id!==id);save();renderAll()}}
-function renderAll(){render();renderDashboard();renderAllTasks()}
+function toggleTask(id){const t=tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderAll();if(selectedSubjectId&&document.getElementById("materiaDetalhe").classList.contains("active"))renderSubjectDetail()}}
+function deleteTask(id){if(confirm("Excluir esta atividade?")){tasks=tasks.filter(x=>x.id!==id);save();renderAll();if(selectedSubjectId&&document.getElementById("materiaDetalhe").classList.contains("active"))renderSubjectDetail()}}
+function renderAll(){render();renderDashboard();renderAllTasks();renderSubjects();updateSubjectSelect();const d=document.getElementById("dashSubjects");if(d)d.textContent=subjects.length+" Disciplinas"}
 
 document.querySelectorAll(".menu button").forEach(btn=>btn.onclick=()=>{
   document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
@@ -213,6 +235,15 @@ document.getElementById("taskForm").onsubmit=e=>{
   tasks.push({id:Date.now().toString(),title:document.getElementById("taskTitle").value.trim(),subject:document.getElementById("taskSubject").value,date:document.getElementById("taskDate").value,type:document.getElementById("taskType").value,done:false});
   save();closeModal();renderAll();
 };
+
+document.getElementById("backSubjects").onclick=()=>{document.getElementById("materiaDetalhe").classList.remove("active");document.getElementById("materias").classList.add("active");};
+document.querySelectorAll(".filter-btn").forEach(btn=>btn.onclick=()=>{subjectFilter=btn.dataset.filter;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderSubjectDetail()});
+document.getElementById("detailNewTask").onclick=()=>{const subject=subjects.find(s=>s.id===selectedSubjectId);if(subject)openModal("",subject.name)};
+document.getElementById("newSubjectBtn").onclick=()=>{document.getElementById("subjectModalBg").classList.add("show");document.getElementById("subjectName").focus()};
+document.getElementById("closeSubjectModal").onclick=()=>document.getElementById("subjectModalBg").classList.remove("show");
+document.getElementById("cancelSubjectModal").onclick=()=>document.getElementById("subjectModalBg").classList.remove("show");
+document.getElementById("subjectModalBg").onclick=e=>{if(e.target.id==="subjectModalBg")document.getElementById("subjectModalBg").classList.remove("show")};
+document.getElementById("subjectForm").onsubmit=e=>{e.preventDefault();const name=document.getElementById("subjectName").value.trim(),color=document.getElementById("subjectColor").value;if(!name)return;if(subjects.some(s=>s.name.toLowerCase()===name.toLowerCase())){alert("Essa matéria já existe.");return}subjects.push({id:Date.now().toString(),name,color});saveSubjects();document.getElementById("subjectForm").reset();document.getElementById("subjectModalBg").classList.remove("show");renderAll()};
 
 renderAll();
 </script>
