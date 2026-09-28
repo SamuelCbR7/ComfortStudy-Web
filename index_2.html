@@ -142,10 +142,22 @@ body{display:flex;min-height:100vh;background:var(--bg);color:var(--text)}
 
 <script>
 const STORAGE_KEY="comfortstudy_tasks_v1";
-let tasks=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+let tasks=[];
+try {
+  const stored=localStorage.getItem(STORAGE_KEY);
+  const parsed=stored ? JSON.parse(stored) : [];
+  tasks=Array.isArray(parsed) ? parsed : [];
+} catch (error) {
+  console.warn("Dados antigos do calendário foram ignorados.", error);
+  try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+  tasks=[];
+}
 let current=new Date();
 
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks));}
+function save(){
+  try { localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks)); }
+  catch(error){ console.warn("Não foi possível salvar as atividades.",error); }
+}
 function isoDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function formatDate(s){const [y,m,d]=s.split("-");return d+"/"+m+"/"+y}
 function openModal(date=""){document.getElementById("taskDate").value=date||isoDate(new Date());document.getElementById("modalBg").classList.add("show");document.getElementById("taskTitle").focus()}
